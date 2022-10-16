@@ -1,5 +1,5 @@
 [package]
-name = "trunk"
+name = "trunkrs"
 version = "0.1.0"
 license = "MIT"
 keywords = ['logging']
