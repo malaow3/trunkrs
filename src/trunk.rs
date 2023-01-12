@@ -1,5 +1,6 @@
 //! Logging setup module.
-use tracing_subscriber::{filter, fmt, prelude::*, reload, Registry};
+use std::str::FromStr;
+use tracing_subscriber::{filter, fmt, prelude::*, reload, EnvFilter, Registry};
 
 extern crate tracing_subscriber;
 
@@ -21,17 +22,32 @@ pub fn init_logging() {
 /// Useful for if you want to enable a verbose mode that prints debug logs.
 pub fn init_mod_logging(
     level: filter::LevelFilter,
+    env: Option<&str>,
 ) -> reload::Handle<filter::LevelFilter, Registry> {
     let filter = level;
     let (filter, reload_handle) = reload::Layer::new(filter);
-    tracing_subscriber::registry()
-        .with(filter)
-        .with(
-            fmt::Layer::default()
-                .with_target(true)
-                .with_file(true)
-                .with_line_number(true),
-        )
-        .init();
+    if env.is_none() {
+        tracing_subscriber::registry()
+            .with(filter)
+            .with(
+                fmt::Layer::default()
+                    .with_target(true)
+                    .with_file(true)
+                    .with_line_number(true),
+            )
+            .init();
+    } else {
+        tracing_subscriber::registry()
+            .with(filter)
+            .with(EnvFilter::from_str(env.unwrap()).unwrap())
+            .with(
+                fmt::Layer::default()
+                    .with_target(true)
+                    .with_file(true)
+                    .with_line_number(true),
+            )
+            .init();
+    }
+
     reload_handle
 }
