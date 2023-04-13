@@ -1,4 +1,9 @@
 //! Logging setup module.
+extern crate env_logger;
+extern crate log;
+use env_logger::fmt::Color;
+use log::Level;
+use std::io::Write;
 use std::str::FromStr;
 use tracing_subscriber::{filter, fmt, prelude::*, reload, EnvFilter, Registry};
 
