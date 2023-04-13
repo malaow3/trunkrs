@@ -203,6 +203,7 @@ dependencies = [
 name = "trunkrs"
 version = "0.2.5"
 dependencies = [
+ "log",
  "tracing",
  "tracing-subscriber",
 ]

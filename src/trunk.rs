@@ -51,3 +51,32 @@ pub fn init_mod_logging(
 
     reload_handle
 }
+
+pub fn init_env_logging(colors: bool, level: log::LevelFilter, env: Option<&str>) {
+    env_logger::Builder::new()
+        .format(move |buf, record| {
+            let level = record.level();
+            let mut style = buf.style();
+            if colors {
+                match record.level() {
+                    Level::Error => style.set_color(Color::Red),
+                    Level::Warn => style.set_color(Color::Yellow),
+                    Level::Info => style.set_color(Color::Green),
+                    Level::Debug => style.set_color(Color::Blue),
+                    Level::Trace => style.set_color(Color::Cyan),
+                };
+            }
+
+            writeln!(
+                buf,
+                "{}:{} {} [{}] - {}",
+                record.file().unwrap_or("unknown"),
+                record.line().unwrap_or(0),
+                chrono::Local::now().format("%Y-%m-%dT%H:%M:%S"),
+                style.value(level),
+                record.args()
+            )
+        })
+        .filter(env, level)
+        .init();
+}
