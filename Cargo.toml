@@ -1,6 +1,6 @@
 [package]
 name = "trunkrs"
-version = "0.2.6"
+version = "0.2.7"
 license = "MIT"
 keywords = ['logging']
 categories = ["logging"]

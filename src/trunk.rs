@@ -31,9 +31,10 @@ pub fn init_mod_logging(
 ) -> reload::Handle<filter::LevelFilter, Registry> {
     let filter = level;
     let (filter, reload_handle) = reload::Layer::new(filter);
-    if env.is_none() {
+    if let Some(env) = env {
         tracing_subscriber::registry()
             .with(filter)
+            .with(EnvFilter::from_str(env).unwrap())
             .with(
                 fmt::Layer::default()
                     .with_target(true)
@@ -44,7 +45,6 @@ pub fn init_mod_logging(
     } else {
         tracing_subscriber::registry()
             .with(filter)
-            .with(EnvFilter::from_str(env.unwrap()).unwrap())
             .with(
                 fmt::Layer::default()
                     .with_target(true)
@@ -53,7 +53,6 @@ pub fn init_mod_logging(
             )
             .init();
     }
-
     reload_handle
 }
 
